@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>👩‍👦 2026 北京廊坊之旅</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --primary-color: #d32f2f;
+            --bg-color: #f7f9fa;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 15px;
+            font-size: 18px;
+        }
+        .header {
+            text-align: center;
+            padding: 20px 10px;
+            background: linear-gradient(135deg, #ff5252, #d32f2f);
+            color: white;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(211, 47, 47, 0.2);
+        }
+        .header h1 { color: white; margin: 0 0 5px 0; font-size: 24px; }
+        .header p { margin: 0; font-size: 15px; opacity: 0.9; }
+        
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            background: #e0e6ed;
+            border-radius: 10px;
+            padding: 5px;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            background: none;
+            border: none;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 8px;
+            color: #666;
+        }
+        .tab-btn.active {
+            background: var(--card-bg);
+            color: var(--primary-color);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .page { display: none; }
+        .page.active { display: block; }
+        
+        /* 行程樣式 */
+        .day-section {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--primary-color);
+        }
+        .day-title {
+            font-size: 19px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        .day-loc {
+            font-size: 14px;
+            color: #777;
+            margin-bottom: 12px;
+            font-weight: bold;
+        }
+        .timeline-item {
+            padding: 10px 0;
+            border-bottom: 1px dashed #eee;
+            font-size: 17px;
+        }
+        .timeline-item:last-child { border-bottom: none; }
+        .time { font-weight: bold; color: #ff9500; margin-right: 10px; }
+        .notice-box {
+            background-color: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 15px;
+            border-radius: 4px;
+        }
+
+        /* 清單樣式 */
+        .list-section {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .input-group {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        .input-group input {
+            flex: 1;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px 0 0 8px;
+            outline: none;
+        }
+        .input-group button {
+            padding: 12px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 0 8px 8px 0;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .todo-item {
+            display: flex;
+            align-items: center;
+            padding: 14px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .todo-item input[type="checkbox"] {
+            width: 26px;
+            height: 26px;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+        .todo-text { flex: 1; font-size: 17px; }
+        .todo-item.checked .todo-text {
+            text-decoration: line-through;
+            color: #aaa;
+        }
+        .delete-btn {
+            background: none;
+            border: none;
+            color: #ff3b30;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 5px 10px;
+        }
+        .loading-text {
+            text-align: center;
+            color: #888;
+            font-size: 16px;
+            padding: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>👩‍👦 北京．廊坊藝術之旅</h1>
+        <p>2026年6月4日 － 6月10日 (7天)</p>
+    </div>
+
+    <div class="tab-container">
+        <button class="tab-btn active" onclick="switchTab('itinerary')">🗓️ 每日行程</button>
+        <button class="tab-btn" onclick="switchTab('checklist')">✅ 準備清單</button>
+    </div>
+
+    <div id="itinerary" class="page active">
+        <div class="day-section">
+            <div class="day-title">6月4日 (四) 第一天</div>
+            <div class="day-loc">📍 香港 ➡️ 北京大興機場 ➡️ 廊坊</div>
+            <div class="timeline-item"><span class="time">午前</span>✈️ 香港機場搭機飛往北京大興機場</div>
+            <div class="timeline-item"><span class="time">午後</span>🚗 抵達大興機場，坐車前往廊坊市</div>
+            <div class="timeline-item"><span class="time">傍晚</span>🏨 學院安排住宿 Check-in、與媽媽安頓行李</div>
+            <div class="timeline-item"><span class="time">晚上</span>🍽️ 媽媽畫畫學院安排的歡迎或安頓活動</div>
+        </div>
+
+        <div class="day-section">
+            <div class="day-title">6月5日 (五) 第二天</div>
+            <div class="day-loc">📍 廊坊市</div>
+            <div class="timeline-item"><span class="time">全日</span>🎨 參與媽媽畫畫學院安排的交流、觀摩或繪畫活動</div>
+            <div class="timeline-item"><span class="time">晚上</span>🍽️ 廊坊當地晚餐，多休息儲備體力</div>
+        </div>
+
+        <div class="day-section">
+            <div class="day-title">6月6日 (六) 第三天</div>
+            <div class="day-loc">📍 廊坊市 ➡️ 北京市區</div>
+            <div class="timeline-item"><span class="time">日間</span>🎨 學院最後半天活動 / 辦理廊坊退房</div>
+            <div class="timeline-item"><span class="time">下午</span>🚄 搭車（高鐵/專車）由廊坊出發前往北京市區</div>
+            <div class="timeline-item"><span class="time">傍晚</span>🏨 北京已預訂酒店 Check-in / 放低行李</div>
+            <div class="timeline-item"><span class="time">晚上</span>🍽️ 北京第一晚晚餐（例如：大董烤鴨或四季民福，建議提前訂位）</div>
+        </div>
+
+        <div class="day-section">
+            <div class="day-title">6月7日 (日) 第四天</div>
+            <div class="day-loc">📍 北京自由行</div>
+            <div class="timeline-item"><span class="time">建議</span>🏛️ 故宮博物院 (紫禁城) 或 天安門廣場</div>
+            <div class="timeline-item"><span class="time">建議</span>🏙️ 晚上去什剎海、南鑼鼓巷行街</div>
+            <div class="notice-box">💡 溫馨提示：北京故宮一般提前 7 天晚上 8 點開搶門票，記得校鬧鐘！</div>
+        </div>
+
+        <div class="day-section">
+            <div class="day-title">6月8日 (一) 第五天</div>
+            <div class="day-loc">📍 北京自由行</div>
+            <div class="timeline-item"><span class="time">建議</span>⛰️ 萬里長城 (八達嶺/慕田峪) 或是 頤和園</div>
+            <div class="timeline-item"><span class="time">晚上</span>🛍️ 王府井步行街散步 / 買手信</div>
+        </div>
+
+        <div class="day-section">
+            <div class="day-title">6月9日 (二) 第六天</div>
+            <div class="day-loc">📍 北京自由行</div>
+            <div class="timeline-item"><span class="time">建議</span>🏛️ 天壇公園 或 798藝術區 (迎合媽媽的藝術興趣)</div>
+            <div class="timeline-item"><span class="time">下午</span>☕ 找一間胡同裡的精緻咖啡店，陪媽媽慢活聊天</div>
+        </div>
+
+        <div class="day-section">
+            <div class="day-title">6月10日 (三) 第七天</div>
+            <div class="day-loc">📍 北京市區 ➡️ 大興機場 ➡️ 香港</div>
+            <div class="timeline-item"><span class="time">上午</span>🏨 酒店退房 / 最後手信衝刺</div>
+            <div class="timeline-item"><span class="time">中午</span>🚄 搭乘大興機場快線或專車前往大興機場</div>
+            <div class="timeline-item"><span class="time">下午</span>✈️ 大興機場起飛，平安返回香港，結束愉快旅程！</div>
+        </div>
+    </div>
+
+    <div id="checklist" class="page">
+        <div class="list-section">
+            <h3>📋 雲端即時同步清單</h3>
+            <div class="input-group">
+                <input type="text" id="todo-input" placeholder="輸入後點擊新增...">
+                <button onclick="addTodo()">新增</button>
+            </div>
+            <div id="todo-list">
+                <div class="loading-text">正在連線到雲端資料庫...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 初始化 Supabase 連線
+        const SUPABASE_URL = "https://dzkvpjischkdyyurgyxx.supabase.co";
+        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6a3ZwamlzY2hrZHl5dXJneXh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3ODU3OTksImV4cCI6MjA5NTM2MTc5OX0.KlUCbrD9-PcxkjmgJ_OLjEzGheN-u3982x2a88IbII4";
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // 分頁切換
+        function switchTab(tabId) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        // 預設清單（只在資料庫完全空白時寫入一次）
+        const defaultTodos = [
+            "🎟️ 預約北京故宮門票（提早7天搶）",
+            "🎟️ 預約天安門廣場參觀（必須提前預約）",
+            "🪪 兩人的回鄉證、身份證（內地高鐵必備）",
+            "📱 手機綁定「微信支付」或「微訊錢包」",
+            "📱 手機下載「高德地圖」App",
+            "🔌 內地用三腳轉兩腳插頭 / 尿袋",
+            "🎨 幫媽媽帶齊畫畫工具",
+            "💊 兩人的常備藥物"
+        ];
+
+        window.onload = function() {
+            fetchTodos();
+        };
+
+        // 從雲端讀取資料
+        async function fetchTodos() {
+            try {
+                let { data: todos, error } = await _supabase
+                    .from('todos')
+                    .select('*')
+                    .order('id', { ascending: true });
+
+                if (error) throw error;
+
+                // 如果資料庫是空的，就幫忙初始化預設清單
+                if (todos.length === 0) {
+                    const insertData = defaultTodos.map(text => ({ text: text, checked: false }));
+                    await _supabase.from('todos').insert(insertData);
+                    fetchTodos(); // 重新讀取
+                    return;
+                }
+
+                renderTodos(todos);
+            } catch (err) {
+                console.error(err);
+                document.getElementById('todo-list').innerHTML = `<div style="color:red; text-align:center;">連線失敗，請檢查 Supabase 設定。</div>`;
+            }
+        }
+
+        // 渲染畫面
+        function renderTodos(todos) {
+            const list = document.getElementById('todo-list');
+            list.innerHTML = '';
+            todos.forEach((todo) => {
+                const item = document.createElement('div');
+                item.className = `todo-item ${todo.checked ? 'checked' : ''}`;
+                item.innerHTML = `
+                    <input type="checkbox" ${todo.checked ? 'checked' : ''} onchange="toggleTodo(${todo.id}, ${todo.checked})">
+                    <span class="todo-text">${todo.text}</span>
+                    <button class="delete-btn" onclick="deleteTodo(${todo.id})">❌</button>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        // 雲端新增項目
+        async function addTodo() {
+            const input = document.getElementById('todo-input');
+            const text = input.value.trim();
+            if (text === '') return;
+
+            await _supabase.from('todos').insert([{ text: text, checked: false }]);
+            input.value = '';
+            fetchTodos();
+        }
+
+        // 雲端切換勾選狀態
+        async function toggleTodo(id, currentCheckedStatus) {
+            await _supabase
+                .from('todos')
+                .update({ checked: !currentCheckedStatus })
+                .eq('id', id);
+            fetchTodos();
+        }
+
+        // 雲端刪除項目
+        async function deleteTodo(id) {
+            await _supabase
+                .from('todos')
+                .delete()
+                .eq('id', id);
+            fetchTodos();
+        }
+    </script>
+</body>
+</html>
