@@ -59,14 +59,35 @@
         .page { display: none; }
         .page.active { display: block; }
         
-        /* 行程樣式 */
+        /* 總覽行程樣式 */
         .day-section {
             background: var(--card-bg);
             border-radius: 12px;
-            padding: 15px;
+            padding: 18px 15px;
             margin-bottom: 15px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
             border-left: 5px solid var(--primary-color);
+            position: relative;
+        }
+        /* 提示 7-9 號是可以點擊的 */
+        .clickable-day {
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .clickable-day:active {
+            background-color: #ffebee;
+        }
+        .clickable-day::after {
+            content: "👉 點擊看詳細行程";
+            position: absolute;
+            right: 15px;
+            top: 20px;
+            font-size: 13px;
+            color: var(--primary-color);
+            font-weight: bold;
+            background: #ffebee;
+            padding: 3px 8px;
+            border-radius: 20px;
         }
         .day-title {
             font-size: 19px;
@@ -75,13 +96,73 @@
             margin-bottom: 5px;
         }
         .day-loc {
-            font-size: 14px;
-            color: #777;
-            margin-bottom: 12px;
+            font-size: 15px;
+            color: #333;
             font-weight: bold;
         }
+        .day-summary {
+            font-size: 14px;
+            color: #777;
+            margin-top: 5px;
+        }
+
+        /* 📱 彈出式詳細頁面 (Modal) 樣式 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+        .modal-content {
+            position: fixed;
+            bottom: 0; /* 從底部彈出，非常適合手機操作 */
+            left: 0;
+            width: 100%;
+            max-height: 85%;
+            background: var(--bg-color);
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.2);
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+            animation: slideUp 0.3s ease-out;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        .modal-header {
+            padding: 20px;
+            background: var(--card-bg);
+            border-bottom: 1px solid #eee;
+            border-radius: 20px 20px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-header h2 { margin: 0; font-size: 20px; color: var(--primary-color); }
+        .close-btn {
+            background: #eee;
+            border: none;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+        .modal-body {
+            padding: 20px;
+            overflow-y: auto; /* 超出長度可以滾動 */
+            flex: 1;
+        }
+        
+        /* 詳細時間線樣式 */
         .timeline-item {
-            padding: 10px 0;
+            padding: 12px 0;
             border-bottom: 1px dashed #eee;
             font-size: 17px;
         }
@@ -90,10 +171,11 @@
         .notice-box {
             background-color: #fff3e0;
             border-left: 4px solid #ff9800;
-            padding: 10px;
-            margin-top: 10px;
+            padding: 12px;
+            margin-top: 15px;
             font-size: 15px;
-            border-radius: 4px;
+            border-radius: 6px;
+            line-height: 1.4;
         }
 
         /* 清單樣式 */
@@ -170,59 +252,58 @@
     </div>
 
     <div id="itinerary" class="page active">
+        
         <div class="day-section">
             <div class="day-title">6月4日 (四) 第一天</div>
             <div class="day-loc">📍 香港 ➡️ 北京大興機場 ➡️ 廊坊</div>
-            <div class="timeline-item"><span class="time">午前</span>✈️ 香港機場搭機飛往北京大興機場</div>
-            <div class="timeline-item"><span class="time">午後</span>🚗 抵達大興機場，坐車前往廊坊市</div>
-            <div class="timeline-item"><span class="time">傍晚</span>🏨 學院安排住宿 Check-in、與媽媽安頓行李</div>
-            <div class="timeline-item"><span class="time">晚上</span>🍽️ 媽媽畫畫學院安排的歡迎或安頓活動</div>
+            <div class="day-summary">今日主要是乘機與搬運行李，入住學院安排的地方。</div>
         </div>
 
         <div class="day-section">
             <div class="day-title">6月5日 (五) 第二天</div>
             <div class="day-loc">📍 廊坊市</div>
-            <div class="timeline-item"><span class="time">全日</span>🎨 參與媽媽畫畫學院安排的交流、觀摩或繪畫活動</div>
-            <div class="timeline-item"><span class="time">晚上</span>🍽️ 廊坊當地晚餐，多休息儲備體力</div>
+            <div class="day-summary">全日參與媽媽畫畫學院安排的交流與繪畫活動。</div>
         </div>
 
         <div class="day-section">
             <div class="day-title">6月6日 (六) 第三天</div>
             <div class="day-loc">📍 廊坊市 ➡️ 北京市區</div>
-            <div class="timeline-item"><span class="time">日間</span>🎨 學院最後半天活動 / 辦理廊坊退房</div>
-            <div class="timeline-item"><span class="time">下午</span>🚄 搭車（高鐵/專車）由廊坊出發前往北京市區</div>
-            <div class="timeline-item"><span class="time">傍晚</span>🏨 北京已預訂酒店 Check-in / 放低行李</div>
-            <div class="timeline-item"><span class="time">晚上</span>🍽️ 北京第一晚晚餐（例如：大董烤鴨或四季民福，建議提前訂位）</div>
+            <div class="day-summary">下午結束廊坊活動，搭車前往北京市區，入住預訂的酒店。</div>
         </div>
 
-        <div class="day-section">
+        <div class="day-section clickable-day" onclick="openModal('day4')">
             <div class="day-title">6月7日 (日) 第四天</div>
-            <div class="day-loc">📍 北京自由行</div>
-            <div class="timeline-item"><span class="time">建議</span>🏛️ 故宮博物院 (紫禁城) 或 天安門廣場</div>
-            <div class="timeline-item"><span class="time">建議</span>🏙️ 晚上去什剎海、南鑼鼓巷行街</div>
-            <div class="notice-box">💡 溫馨提示：北京故宮一般提前 7 天晚上 8 點開搶門票，記得校鬧鐘！</div>
+            <div class="day-loc">📍 頤和園皇家園林美景遊</div>
+            <div class="day-summary">慢步長城看畫、昆明湖坐船，陪媽媽輕鬆看風景。</div>
         </div>
 
-        <div class="day-section">
+        <div class="day-section clickable-day" onclick="openModal('day5')">
             <div class="day-title">6月8日 (一) 第五天</div>
-            <div class="day-loc">📍 北京自由行</div>
-            <div class="timeline-item"><span class="time">建議</span>⛰️ 萬里長城 (八達嶺/慕田峪) 或是 頤和園</div>
-            <div class="timeline-item"><span class="time">晚上</span>🛍️ 王府井步行街散步 / 買手信</div>
+            <div class="day-loc">📍 慕田峪長城（官方專線巴士遊）</div>
+            <div class="day-summary">前門出發！搭雙程舒適纜車輕鬆上長城，下山看鳥巢。</div>
         </div>
 
-        <div class="day-section">
+        <div class="day-section clickable-day" onclick="openModal('day6')">
             <div class="day-title">6月9日 (二) 第六天</div>
-            <div class="day-loc">📍 北京自由行</div>
-            <div class="timeline-item"><span class="time">建議</span>🏛️ 天壇公園 或 798藝術區 (迎合媽媽的藝術興趣)</div>
-            <div class="timeline-item"><span class="time">下午</span>☕ 找一間胡同裡的精緻咖啡店，陪媽媽慢活聊天</div>
+            <div class="day-loc">📍 紫禁城故宮深度遊 ➡️ 798藝術區</div>
+            <div class="day-summary">平日人流較少，深度遊覽故宮，下午看現代藝術。</div>
         </div>
 
         <div class="day-section">
             <div class="day-title">6月10日 (三) 第七天</div>
             <div class="day-loc">📍 北京市區 ➡️ 大興機場 ➡️ 香港</div>
-            <div class="timeline-item"><span class="time">上午</span>🏨 酒店退房 / 最後手信衝刺</div>
-            <div class="timeline-item"><span class="time">中午</span>🚄 搭乘大興機場快線或專車前往大興機場</div>
-            <div class="timeline-item"><span class="time">下午</span>✈️ 大興機場起飛，平安返回香港，結束愉快旅程！</div>
+            <div class="day-summary">最後手信衝刺，搭機場快線前往大興機場，平安返港。</div>
+        </div>
+    </div>
+
+    <div id="modalOverlay" class="modal-overlay" onclick="closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h2 id="modalTitle">當天詳細行程</h2>
+                <button class="close-btn" onclick="closeModal()">返回 ↩容</button>
+            </div>
+            <div id="modalBody" class="modal-body">
+                </div>
         </div>
     </div>
 
@@ -245,6 +326,64 @@
         const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6a3ZwamlzY2hrZHl5dXJneXh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3ODU3OTksImV4cCI6MjA5NTM2MTc5OX0.KlUCbrD9-PcxkjmgJ_OLjEzGheN-u3982x2a88IbII4";
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+        // 儲存 7、8、9 號的詳細行程數據
+        const detailedItineraries = {
+            day4: {
+                title: "6月7日 (日) 頤和園皇家園林詳細行程",
+                html: `
+                    <div class="timeline-item"><span class="time">09:00</span>🏨 酒店享用早餐，出發乘搭地鐵前往頤和園</div>
+                    <div class="timeline-item"><span class="time">10:00</span>🛶 進入頤和園，漫步欣賞【長廊】上的彩繪（非常適合媽媽看畫）</div>
+                    <div class="timeline-item"><span class="time">11:30</span>🚢 前往碼頭乘搭【昆明湖遊船】，坐在船上吹風看萬壽山，完全不費腳力</div>
+                    <div class="timeline-item"><span class="time">13:00</span>🍽️ 園內或附近享用午餐，稍作休息</div>
+                    <div class="timeline-item"><span class="time">15:00</span>🏙️ 下午前往【景山公園】，登頂只需10分鐘，可以俯瞰整個紫禁城全景，超級震撼！</div>
+                    <div class="timeline-item"><span class="time">17:30</span>☕ 散步前往【什剎海】或【南鑼鼓巷】胡同區，找間四合院咖啡店陪媽媽嘆下午茶</div>
+                    <div class="notice-box">💡 <b>軍師提示：</b>頤和園非常大，走累了千萬不要硬撐，隨時找亭子坐下或者去坐船。記得提前 7 天（即5月31日）網上買好門票！</div>
+                `
+            },
+            day5: {
+                title: "6月8日 (一) 慕田峪長城詳細行程",
+                html: `
+                    <div class="timeline-item"><span class="time">07:20</span>🚇 從酒店出發，前往地鐵【前門站】</div>
+                    <div class="timeline-item"><span class="time">08:00</span>🚌 準時乘搭【北京旅遊集散中心】官方專線巴士，出發前往長城</div>
+                    <div class="timeline-item"><span class="time">10:00</span>⛰️ 抵達慕田峪長城！購買【雙程箱式纜車】門票直達第 14 號敵樓</div>
+                    <div class="timeline-item"><span class="time">10:30</span>🎨 開啟長城慢活漫步（重點行 14 - 16 號敵樓，路最平坦好走），陪媽媽寫生或影大片</div>
+                    <div class="timeline-item"><span class="time">13:30</span>🍽️ 下山在景區享用午餐（推薦試下當地的烤虹鱒魚）</div>
+                    <div class="timeline-item"><span class="time">14:30</span>🚌 於巴士停車場集合，乘車返回北京市區</div>
+                    <div class="timeline-item"><span class="time">16:30</span>🏟️ <b>順路景點：</b>回程可選擇在【鳥巢/水立方】落車，在外面散步影相，看現代宏偉建築</div>
+                    <div class="notice-box">💡 <b>軍師提示：</b>長城山上風大，記得幫媽媽帶件薄外套。必須提前在「北京旅游集散中心」微信公眾號實名制預約好車票。</div>
+                `
+            },
+            day6: {
+                title: "6月9日 (二) 故宮與藝術區詳細行程",
+                html: `
+                    <div class="timeline-item"><span class="time">08:10</span>🚇 提早出發前往天安門，因為安檢需要較長時間</div>
+                    <div class="timeline-item"><span class="time">08:30</span>🏛️ 進入【故宮博物院（紫禁城）】！走中軸線看太和殿，再帶媽媽去看【珍寶館】和【鐘錶館】（裡面有極高工藝價值的藝術品）</div>
+                    <div class="timeline-item"><span class="time">13:00</span>🍽️ 故宮內享用簡單午餐（或著名的故宮冰棒）</div>
+                    <div class="timeline-item"><span class="time">14:30</span>🚕 離開故宮，乘車前往【798藝術區】</div>
+                    <div class="timeline-item"><span class="time">15:15</span>🎨 逛 798 藝術工廠，看現代畫展、雕塑與文創小店，非常迎合媽媽的畫畫藝術興趣</div>
+                    <div class="timeline-item"><span class="time">18:30</span>🍽️ 晚餐安排北京烤鴨（如四季民福），慶祝北京自由行圓滿成功</div>
+                    <div class="notice-box">💡 <b>超級重要提示：</b>故宮星期一休館，所以星期二開館門票極度搶手！必須提前 7 天（即6月2日）晚上 20:00 準時在微信「故宮博物院」小程序搶票！</div>
+                `
+            }
+        };
+
+        // 打開彈出詳細頁面
+        function openModal(dayKey) {
+            const data = detailedItineraries[dayKey];
+            if (!data) return;
+            
+            document.getElementById('modalTitle').innerText = data.title;
+            document.getElementById('modalBody').innerHTML = data.html;
+            document.getElementById('modalOverlay').style.display = 'block';
+            document.body.style.overflow = 'hidden'; /* 阻止背景滾動 */
+        }
+
+        // 關閉彈出詳細頁面
+        function closeModal() {
+            document.getElementById('modalOverlay').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
         // 分頁切換
         function switchTab(tabId) {
             document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
@@ -253,15 +392,15 @@
             event.currentTarget.classList.add('active');
         }
 
-        // 預設清單（只在資料庫完全空白時寫入一次）
+        // 預設清單（只在資料庫空白時初始化）
         const defaultTodos = [
-            "🎟️ 預約北京故宮門票（提早7天搶）",
-            "🎟️ 預約天安門廣場參觀（必須提前預約）",
-            "🪪 兩人的回鄉證、身份證（內地高鐵必備）",
+            "🎟️ 預約 6/9 故宮門票（6/2 晚上20:00 準時搶！）",
+            "🎟️ 預約 6/7 頤和園門票（5/31 預約）",
+            "🚌 預約 6/8 旅遊集散中心長城巴士車票",
+            "🪪 兩人的回鄉證、身份證（必須隨身帶，內地景點要刷證件進場）",
             "📱 手機綁定「微信支付」或「微訊錢包」",
             "📱 手機下載「高德地圖」App",
             "🔌 內地用三腳轉兩腳插頭 / 尿袋",
-            "🎨 幫媽媽帶齊畫畫工具",
             "💊 兩人的常備藥物"
         ];
 
@@ -269,7 +408,7 @@
             fetchTodos();
         };
 
-        // 從雲端讀取資料
+        // 從雲端讀取清單
         async function fetchTodos() {
             try {
                 let { data: todos, error } = await _supabase
@@ -279,22 +418,19 @@
 
                 if (error) throw error;
 
-                // 如果資料庫是空的，就幫忙初始化預設清單
                 if (todos.length === 0) {
                     const insertData = defaultTodos.map(text => ({ text: text, checked: false }));
                     await _supabase.from('todos').insert(insertData);
-                    fetchTodos(); // 重新讀取
+                    fetchTodos();
                     return;
                 }
-
                 renderTodos(todos);
             } catch (err) {
                 console.error(err);
-                document.getElementById('todo-list').innerHTML = `<div style="color:red; text-align:center;">連線失敗，請檢查 Supabase 設定。</div>`;
+                document.getElementById('todo-list').innerHTML = `<div style="color:red; text-align:center;">連線失敗。</div>`;
             }
         }
 
-        // 渲染畫面
         function renderTodos(todos) {
             const list = document.getElementById('todo-list');
             list.innerHTML = '';
@@ -310,32 +446,22 @@
             });
         }
 
-        // 雲端新增項目
         async function addTodo() {
             const input = document.getElementById('todo-input');
             const text = input.value.trim();
             if (text === '') return;
-
             await _supabase.from('todos').insert([{ text: text, checked: false }]);
             input.value = '';
             fetchTodos();
         }
 
-        // 雲端切換勾選狀態
         async function toggleTodo(id, currentCheckedStatus) {
-            await _supabase
-                .from('todos')
-                .update({ checked: !currentCheckedStatus })
-                .eq('id', id);
+            await _supabase.from('todos').update({ checked: !currentCheckedStatus }).eq('id', id);
             fetchTodos();
         }
 
-        // 雲端刪除項目
         async function deleteTodo(id) {
-            await _supabase
-                .from('todos')
-                .delete()
-                .eq('id', id);
+            await _supabase.from('todos').delete().eq('id', id);
             fetchTodos();
         }
     </script>
