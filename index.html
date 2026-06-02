@@ -272,6 +272,244 @@
     <script>
         const SUPABASE_URL = "https://dzkvpjischkdyyurgyxx.supabase.co";
         const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6a3ZwamlzY2hrZHl5dXJneXh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3ODU3OTksImV4cCI6MjA5NTM2MTc5OX0.KlUCbrD9-PcxkjmgJ_OLjEzGheN-u3982x2a88IbII4";
+        const _supabase = supabase.            display: flex;
+            margin-bottom: 20px;
+            background: #e0e6ed;
+            border-radius: 10px;
+            padding: 5px;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            background: none;
+            border: none;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 8px;
+            color: #666;
+        }
+        .tab-btn.active {
+            background: var(--card-bg);
+            color: var(--primary-color);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .page { display: none; }
+        .page.active { display: block; }
+        
+        /* 總覽行程樣式 */
+        .day-section {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 18px 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--primary-color);
+            position: relative;
+        }
+        .clickable-day { cursor: pointer; }
+        .clickable-day:active { background-color: #ffebee; }
+        .clickable-day::after {
+            content: "👉 詳情";
+            position: absolute;
+            right: 15px;
+            top: 20px;
+            font-size: 13px;
+            color: var(--primary-color);
+            font-weight: bold;
+            background: #ffebee;
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
+        .day-title { font-size: 19px; font-weight: bold; color: var(--primary-color); margin-bottom: 5px; }
+        .day-loc { font-size: 15px; color: #333; font-weight: bold; }
+        .day-summary { font-size: 14px; color: #777; margin-top: 5px; }
+
+        /* 📱 彈出式詳細頁面 (Modal) 樣式 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+        .modal-content {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 85%;
+            background: var(--bg-color);
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.2);
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+            animation: slideUp 0.3s ease-out;
+        }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .modal-header {
+            padding: 15px 20px;
+            background: var(--card-bg);
+            border-bottom: 1px solid #eee;
+            border-radius: 20px 20px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-header h2 { margin: 0; font-size: 19px; color: var(--primary-color); }
+        .close-btn { background: #eee; border: none; font-size: 15px; font-weight: bold; padding: 8px 15px; border-radius: 20px; cursor: pointer; }
+        .modal-body { padding: 15px 20px; overflow-y: auto; flex: 1; }
+        
+        /* 交通表格樣式 */
+        .transport-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0 15px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            font-size: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .transport-table th, .transport-table td { padding: 10px; text-align: left; border-bottom: 1px solid #eee; }
+        .transport-table th { background-color: #eaeaea; color: #333; font-weight: bold; }
+        
+        /* 價格對比盒樣式 */
+        .price-container {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .price-box {
+            flex: 1;
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            border: 1px solid #e0e0e0;
+        }
+        .price-box h4 { margin: 0 0 8px 0; color: #333; font-size: 15px; border-bottom: 2px solid #ddd; padding-bottom: 4px; }
+        .price-box ul { margin: 0; padding-left: 15px; }
+        .price-box li { margin-bottom: 4px; }
+
+        /* 圖片樣式 */
+        .map-image {
+            width: 100%;
+            max-width: 500px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin-top: 5px;
+            margin-bottom: 10px;
+        }
+
+        /* 詳細時間線樣式 */
+        .timeline-item { padding: 12px 0; border-bottom: 1px dashed #eee; font-size: 16px; line-height: 1.4; }
+        .timeline-item:last-child { border-bottom: none; }
+        .time { font-weight: bold; color: var(--accent-color); margin-right: 8px; }
+        .highlight-alert { background-color: #fff3e0; color: #e65100; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 14px; }
+        
+        .notice-box { background-color: #ffebee; border-left: 4px solid var(--primary-color); padding: 12px; margin-top: 15px; font-size: 14px; border-radius: 6px; line-height: 1.4; }
+
+        /* 清單樣式 */
+        .list-section { background: var(--card-bg); border-radius: 12px; padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .input-group { display: flex; margin-bottom: 15px; }
+        .input-group input { flex: 1; padding: 12px; font-size: 16px; border: 1px solid #ccc; border-radius: 8px 0 0 8px; outline: none; }
+        .input-group button { padding: 12px 20px; background-color: var(--primary-color); color: white; border: none; border-radius: 0 8px 8px 0; font-size: 16px; font-weight: bold; }
+        .todo-item { display: flex; align-items: center; padding: 14px 0; border-bottom: 1px solid #f0f0f0; }
+        .todo-item input[type="checkbox"] { width: 26px; height: 26px; margin-right: 15px; cursor: pointer; }
+        .todo-text { flex: 1; font-size: 17px; }
+        .todo-item.checked .todo-text { text-decoration: line-through; color: #aaa; }
+        .delete-btn { background: none; border: none; color: #ff3b30; font-size: 18px; cursor: pointer; padding: 5px 10px; }
+        .loading-text { text-align: center; color: #888; font-size: 16px; padding: 20px 0; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>👩‍👦 北京．廊坊藝術之旅</h1>
+        <p>2026年6月4日 － 6月10日 (7天)</p>
+    </div>
+
+    <div class="tab-container">
+        <button class="tab-btn active" onclick="switchTab('itinerary')">🗓️ 每日行程</button>
+        <button class="tab-btn" onclick="switchTab('checklist')">✅ 準備清單</button>
+    </div>
+
+    <div id="itinerary" class="page active">
+        <div class="day-section">
+            <div class="day-title">6月4日 (四) 第一天</div>
+            <div class="day-loc">📍 香港 ➡️ 北京大興機場 ➡️ 廊坊</div>
+            <div class="day-summary">乘機與搬運行李，入住學院安排的地方。</div>
+        </div>
+
+        <div class="day-section">
+            <div class="day-title">6月5日 (五) 第二天</div>
+            <div class="day-loc">📍 廊坊市</div>
+            <div class="day-summary">全日參與媽媽畫畫學院安排的交流與繪畫活動。</div>
+        </div>
+
+        <div class="day-section">
+            <div class="day-title">6月6日 (六) 第三天</div>
+            <div class="day-loc">📍 廊坊市 ➡️ 北京市區</div>
+            <div class="day-summary">下午結束廊坊活動，搭車前往北京桔子酒店入住。</div>
+        </div>
+
+        <div class="day-section clickable-day" onclick="openModal('day4')">
+            <div class="day-title">6月7日 (日) 第四天</div>
+            <div class="day-loc">📍 頤和園皇家園林漫步遊</div>
+            <div class="day-summary">遊覽經典皇家園林，預計遊玩 3-5 小時。</div>
+        </div>
+
+        <div class="day-section clickable-day" onclick="openModal('day5')">
+            <div class="day-title">6月8日 (一) 第五天</div>
+            <div class="day-loc">📍 慕田峪長城 ➡️ 天壇公園</div>
+            <div class="day-summary">搭集散中心大巴直達長城，回程可逛天壇。</div>
+        </div>
+
+        <div class="day-section clickable-day" onclick="openModal('day6')">
+            <div class="day-title">6月9日 (二) 第六天</div>
+            <div class="day-loc">📍 故宮博物院 ➡️ 恭王府 ➡️ 什剎海</div>
+            <div class="day-summary">深度遊故宮兼享用宮廷下午茶，下午漫步恭王府。</div>
+        </div>
+
+        <div class="day-section">
+            <div class="day-title">6月10日 (三) 第七天</div>
+            <div class="day-loc">📍 北京市區 ➡️ 大興機場 ➡️ 香港</div>
+            <div class="day-summary">最後手信衝刺，搭機場快線前往大興機場返港。</div>
+        </div>
+    </div>
+
+    <div id="modalOverlay" class="modal-overlay" onclick="closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h2 id="modalTitle">當天詳細行程</h2>
+                <button class="close-btn" onclick="closeModal()">返回 ↩</button>
+            </div>
+            <div id="modalBody" class="modal-body"></div>
+        </div>
+    </div>
+
+    <div id="checklist" class="page">
+        <div class="list-section">
+            <h3>📋 雲端即時同步清單</h3>
+            <div class="input-group">
+                <input type="text" id="todo-input" placeholder="輸入後點擊新增...">
+                <button onclick="addTodo()">新增</button>
+            </div>
+            <div id="todo-list">
+                <div class="loading-text">正在連線到雲端資料庫...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = "https://dzkvpjischkdyyurgyxx.supabase.co";
+        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6a3ZwamlzY2hrZHl5dXJneXh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3ODU3OTksImV4cCI6MjA5NTM2MTc5OX0.KlUCbrD9-PcxkjmgJ_OLjEzGheN-u3982x2a88IbII4";
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         // 儲存最新的詳細數據
