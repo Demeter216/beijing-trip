@@ -230,7 +230,7 @@
         <div class="day-section clickable-day" onclick="openModal('day5')">
             <div class="day-title">6月8日 (一) 第五天</div>
             <div class="day-loc">📍 慕田峪長城 ➡️ 天壇公園</div>
-            <div class="day-summary">搭集散中心大巴直達長城，回程可逛天壇。</div>
+            <div class="day-summary">搭集散中心大巴直達長城，回程可逛天壇. </div>
         </div>
 
         <div class="day-section clickable-day" onclick="openModal('day6')">
@@ -333,7 +333,7 @@
                     <div class="timeline-item"><span class="time">06:45</span>🚶 酒店步行前往【正陽門箭樓南門】集合上車</div>
                     <div class="timeline-item"><span class="time">08:30</span>⛰️ 抵達慕田峪長城景區 P4 停車場，前往纜車站</div>
                     <div class="timeline-item"><span class="time">13:00-16:00</span>🚌 P4 停車場集合搭大巴返程</div>
-                    <div class="timeline-item"><span class="time">約15:30</span>🏮 <b>終點站</b>：抵達前門站，下車後可直接順路遊覽旁邊的【天壇公園】</div>
+                    <div class="timeline-item"><span class="time">約15:30</span>🏮 <b>終點站</b>：抵達前門站，下車後開可以直接順路遊覽旁邊的【天壇公園】</div>
 
                     <div style="text-align: center; margin: 15px 0;">
                         <p style="font-size: 15px; font-weight: bold; color: var(--primary-color); margin-bottom: 5px;">🗺️ 慕田峪長城遊覽路線圖 (雙程纜車在左邊喔！)</p>
@@ -372,11 +372,13 @@
             document.getElementById('modalTitle').innerText = data.title;
             modalBody.innerHTML = data.html;
             
-            // 關鍵修復：每次開啟彈出視窗時，自動將滾動條拉回最頂
-            modalBody.scrollTop = 0;
-            
             document.getElementById('modalOverlay').style.display = 'block';
             document.body.style.overflow = 'hidden';
+
+            // 🌟 核心修復：延遲 50 毫秒執行，確保內容完整渲染後，100% 滾動到最頂端
+            setTimeout(() => {
+                modalBody.scrollTop = 0;
+            }, 50);
         }
 
         function closeModal() {
