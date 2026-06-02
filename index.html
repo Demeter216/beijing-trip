@@ -160,17 +160,13 @@
         .price-box ul { margin: 0; padding-left: 15px; }
         .price-box li { margin-bottom: 4px; }
 
-        /* 圖片預留位置樣式 */
-        .photo-placeholder {
-            background: #eaedf1;
-            border: 2px dashed #cbd5e1;
+        /* 圖片樣式 */
+        .map-image {
+            width: 100%;
+            max-width: 500px;
             border-radius: 10px;
-            padding: 30px 10px;
-            text-align: center;
-            color: #64748b;
-            font-size: 14px;
-            margin: 15px 0;
-            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin-top: 5px;
         }
 
         /* 詳細時間線樣式 */
@@ -230,13 +226,13 @@
         <div class="day-section clickable-day" onclick="openModal('day4')">
             <div class="day-title">6月7日 (日) 第四天</div>
             <div class="day-loc">📍 頤和園皇家園林漫步遊</div>
-            <div class="day-summary">遊覽精美園林與昆明湖，預計遊玩 3-5 小時。</div>
+            <div class="day-summary">遊覽經典皇家園林，預計遊玩 3-5 小時。</div>
         </div>
 
         <!-- Day 5 (可點擊) -->
         <div class="day-section clickable-day" onclick="openModal('day5')">
             <div class="day-title">6月8日 (一) 第五天</div>
-            <div class="day-loc">📍 慕田峪長城 ➡️ 天安門/天壇公園</div>
+            <div class="day-loc">📍 慕田峪長城 ➡️ 天壇公園</div>
             <div class="day-summary">搭集散中心大巴直達長城，回程可逛天壇。</div>
         </div>
 
@@ -286,12 +282,10 @@
 
         // 儲存最新的詳細數據
         const detailedItineraries = {
-            // 儲存最新的詳細數據 (已刪除時間線，並加入了長城與頤和園地圖)
-        const detailedItineraries = {
             day4: {
                 title: "6月7日 (日) 頤和園遊覽指南",
                 html: `
-                    <h4>🚗 交通方式對比（由前門出發）：</h4>
+                    <h4>🚗 交通方式對比（由酒店出發）：</h4>
                     <table class="transport-table">
                         <tr><th>交通工具</th><th>預估時間</th><th>路線 / 車費</th></tr>
                         <tr><td>🚇 公共交通</td><td>1小時5分鐘</td><td>2號線內環 → 西直門站轉 4號線大興線 → 北宮門站落車，步行6分鐘</td></tr>
@@ -302,10 +296,10 @@
                     
                     <div style="text-align: center; margin: 15px 0;">
                         <p style="font-size: 15px; font-weight: bold; color: var(--primary-color); margin-bottom: 5px;">🗺️ 頤和園最全遊覽路線 (跟著黃色虛線坐船最省力！)</p>
-                        <img src="yiheyuan-map.jpg" alt="頤和園地圖" style="width: 100%; max-width: 500px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                        <img src="yiheyuan-map.jpg" alt="頤和園地圖" class="map-image">
                     </div>
 
-                    <div class="notice-box">💡 <b>軍師提示：</b>頤和園有4個故宮咁大，可按體力選擇路線，或者去坐船。</div>
+                    <div class="notice-box">💡 <b>軍師提示：</b>頤和園有4個故宮咁大，記住按體力選擇遊玩路線，或者去坐船。</div>
                 `
             },
             day5: {
@@ -340,23 +334,22 @@
                     <div class="timeline-item"><span class="time">07:30</span>🚶 酒店步行前往【正陽門箭樓南門】集合上車</div>
                     <div class="timeline-item"><span class="time">08:30-11:30</span>⛰️ 抵達慕田峪長城景區 P4 停車場，開啟長城暢玩、拍照</div>
                     <div class="timeline-item"><span class="time">13:00-16:00</span>🚌 P4 停車場集合搭大巴返程</div>
-                    <div class="timeline-item"><span class="time">約14:30</span>🏟️ <b>中途下車點</b>：抵達奧林匹克公園，可自行下車打卡鳥巢、水立方（附近有地鐵8號線奧體中心站）</div>
                     <div class="timeline-item"><span class="time">約15:30</span>🏮 <b>終點站</b>：抵達前門站，下車後可直接順路遊覽旁邊的【天壇公園】</div>
 
                     <div style="text-align: center; margin: 15px 0;">
                         <p style="font-size: 15px; font-weight: bold; color: var(--primary-color); margin-bottom: 5px;">🗺️ 慕田峪長城遊覽路線圖 (雙程纜車在左邊喔！)</p>
-                        <img src="greatwall-map.jpg" alt="長城地圖" style="width: 100%; max-width: 500px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                        <img src="greatwall-map.jpg" alt="長城地圖" class="map-image">
                     </div>
                 `
             },
             day6: {
                 title: "6月9日 (二) 故宮深度遊 & 恭王府",
                 html: `
-                    <h4>🚗 交通方式對比（由前門出發）：</h4>
+                    <h4>🚗 交通方式對比（由酒店出發）：</h4>
                     <table class="transport-table">
                         <tr><th>交通工具</th><th>預估時間</th><th>路線 / 車費</th></tr>
                         <tr><td>🚇 公共交通</td><td>45分鐘</td><td>8號線 → 金魚胡同站落車，再步行 24 分鐘至故宮入口</td></tr>
-                        <tr><td>🚕 打車</td><td>~30分鐘</td><td>約 10 元人民幣</td></tr>
+                        <tr><td>🚕 打車</td><td>~30分鐘</td><td>約 10 元人民幣 (極平！)</td></tr>
                     </table>
 
                     <h4>👑 重點皇家藝術行程：</h4>
@@ -370,73 +363,8 @@
                 `
             }
         };
-                `
-            },
-            day5: {
-                title: "6月8日 (一) 慕田峪長城 & 天壇遊",
-                html: `
-                    <h4>🚌 北京旅遊集散中心大巴攻略：</h4>
-                    <div class="timeline-item">📍 <b>【前門發車站位置】</b>：正陽門箭樓南門（近地鐵2號線前門站C出口）</div>
-                    <div class="timeline-item">⏱️ <b>出發班次</b>：07:00 - 11:00 流水發班，多班次，隨到隨走，坐滿即發</div>
-                    <div class="timeline-item">⏱️ <b>返程班次</b>：13:00 - 16:00 流水發班返程。單程車程約 90 分鐘</div>
 
-                    <div class="price-container">
-                        <div class="price-box">
-                            <h4>🎫 大巴車套票（推薦）</h4>
-                            <ul>
-                                <li><b>成人票：</b>120 元</li>
-                                <li><b>老人票：</b>100 元</li>
-                                <li><small>(包來回車費＋門票＋免換乘擺渡)</small></li>
-                                <li>可在車上加購纜車雙程：140元/人</li>
-                            </ul>
-                        </div>
-                        <div class="price-box">
-                            <h4>💵 官方原價參考</h4>
-                            <ul>
-                                <li>成人門票：40 元 / 老人：20 元</li>
-                                <li>擺渡車票：15 元</li>
-                                <li>纜車雙程：140 元 / 單程：100 元</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="photo-placeholder">🗺️ 【酒店步行到發車站地圖位置】</div>
-
-                    <h4>⏱️ 今日時間流水線：</h4>
-                    <div class="timeline-item"><span class="time">07:30</span>🚶 酒店步行前往【正陽門箭樓南門】集合上車</div>
-                    <div class="timeline-item"><span class="time">08:30-11:30</span>⛰️ 抵達慕田峪長城景區 P4 停車場，開啟長城暢玩、拍照</div>
-                    <div class="timeline-item"><span class="time">13:00-16:00</span>🚌 P4 停車場集合搭大巴返程</div>
-                    <div class="timeline-item"><span class="time">約14:30</span>🏟️ <b>中途下車點</b>：抵達奧林匹克公園，可自行下車打卡鳥巢、水立方（附近有地鐵8號線奧體中心站）</div>
-                    <div class="timeline-item"><span class="time">約15:30</span>🏮 <b>終點站</b>：抵達前門站，下車後可直接順路遊覽旁邊的【天壇公園】</div>
-
-                    <div style="text-align: center; margin: 15px 0;">
-    <p style="font-size: 15px; font-weight: bold; color: var(--primary-color); margin-bottom: 5px;">🗺️ 慕田峪長城遊覽路線圖 (雙程纜車在左邊喔！)</p>
-    <img src="greatwall-map.jpg" alt="長城地圖" style="width: 100%; max-width: 500px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-</div>
-                `
-            },
-            day6: {
-                title: "6月9日 (二) 故宮深度遊 & 恭王府",
-                html: `
-                    <h4>🚗 交通方式對比（由前門出發）：</h4>
-                    <table class="transport-table">
-                        <tr><th>交通工具</th><th>預估時間</th><th>路線 / 車費</th></tr>
-                        <tr><td>🚇 公共交通</td><td>45分鐘</td><td>8號線 → 金魚胡同站落車，再步行 24 分鐘至故宮入口</td></tr>
-                        <tr><td>🚕 打車</td><td>~30分鐘</td><td>約 10 元人民幣 (極平！)</td></tr>
-                    </table>
-
-                    <h4>👑 重點皇家藝術行程：</h4>
-                    <div class="timeline-item"><span class="time">08:30</span>🏛️ 進入故宮博物院，建議乘的士直達午門安檢，避開地鐵步行</div>
-                    <div class="timeline-item"><span class="time">11:30</span>☕ <span class="highlight-alert">⏰ 記得手機搶號！</span>【萬春金福下午茶（坤寧宮店）】線上取號開始。營業至16:00</div>
-                    <div class="timeline-item"><span class="time">13:30</span>🚶 離開故宮，前往【恭王府】（步行約40分鐘，大力推薦直接打車約30分鐘保護雙腿）</div>
-                    <div class="timeline-item"><span class="time">14:00</span>🏡 遊覽奢華的恭王府，看「福」字碑與精美江南園林</div>
-                    <div class="timeline-item"><span class="time">17:00</span>🌊 傍晚漫步隔壁的【什刹海】，吹吹海風，搵間靚餐廳食晚餐</div>
-                    
-                    <div class="notice-box">💡 <b>軍師提示：</b>今日路程非常多，在故宮到恭王府、以及故宮內部移動時，能打車就打車，隨時提醒媽媽在宮殿長廊或椅子坐下休息。</div>
-                `
-            }
-        };
-
+        // 彈出式視窗控制函數
         function openModal(dayKey) {
             const data = detailedItineraries[dayKey];
             if (!data) return;
